@@ -83,4 +83,5 @@ Additionally, standard F Prime ports are defined for:
 
 This component design is captured in the block diagram below, with input ports on the left and output ports on the right. Ports for standard F Prime functions (e.g., commands, events, telemetry, and parameters) are highlighted in green, while the ExecPython port (used for triggering external scripts) is specially integrated.
 
-![image](https://github.com/user-attachments/assets/ecff9840-32c5-4b0a-b19d-f92b8519d452)
+![image](https://github.com/user-attachments/assets/6e339eb3-4826-4b8b-9005-7ae682a8c159)
+

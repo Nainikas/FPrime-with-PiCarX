@@ -21,24 +21,30 @@ fprime-util generate
 # System Requirements
 We need high level system requirements. These requirements would be defined by requirements sepcified by the electronic subsystem which are themselves derived by requirements defined at the full system level.
 
-| **Requirement** | **Description** |
-|-----------------|-----------------|
-| SYSTEM-001      | The system shall integrate the camera and motor components using the F Prime framework. |
-| SYSTEM-002      | The system shall report telemetry data for both camera and motor statuses in real time. |
+| **Requirement** | **Description**                                                                                                                       |
+|-----------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| SYSTEM-001      | The system shall integrate the camera, motor, and ultrasonic sensor components using the F Prime framework.                           |
+| SYSTEM-002      | The system shall report telemetry data for the statuses of the camera, motor, and ultrasonic sensor components in real time.            |
+
+
 
 # Software Requirements
 
-| **Requirement** | **Description** |
-|-----------------|-----------------|
-| CAM-001         | The system shall capture images using the camera when requested and report the capture status via telemetry. |
-| IMG-002         | The system shall process captured images to detect objects and provide detection results. |
-| MOT-003         | The system shall execute drive and stop commands for motor control based on system inputs. |
-| INT-004         | The system shall integrate the camera and motor control modules within the F Prime framework for seamless communication and telemetry logging. |
-| ERR-005         | The system shall implement error handling and logging for both the camera and motor modules to facilitate debugging. |
+| **Requirement** | **Description**                                                                                                                        |
+|-----------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| CAM-001         | The software shall capture images using the camera when requested and report the capture status via telemetry.                           |
+| IMG-002         | The software shall process captured images to detect objects and provide detection results.                                             |
+| MOT-003         | The software shall execute drive and stop commands for motor control based on system inputs.                                              |
+| MOT-004         | The software shall control the motor using GPIO pin 13.                                                                                |
+| US-001          | The software shall continuously monitor ultrasonic sensor readings to detect obstacles in the vehicle's path.                             |
+| US-002          | The software shall generate obstacle avoidance commands when an obstacle is detected within a predefined threshold distance.              |
+| INT-005         | The software shall integrate the camera, motor, and ultrasonic sensor modules within the F Prime framework for seamless communication and telemetry logging. |
+| ERR-006         | The software shall implement error handling and logging for the camera, motor, and ultrasonic sensor modules to facilitate debugging.   |
+
 
 # PiCar-X Requirements
 
-Here we list a number of requirements for our PiCar-X software to implement.
+Here we list a number of requirements for the PiCar-X software to implement.
 
 | **Requirement**      | **Description**                                                                                               | **Derived From**                         | **Verification**  |
 |----------------------|---------------------------------------------------------------------------------------------------------------|------------------------------------------|-------------------|
@@ -47,7 +53,34 @@ Here we list a number of requirements for our PiCar-X software to implement.
 | PICARX-MOT-001       | The software shall execute drive commands to control motor speed and direction.                                | SYSTEM & SW Requirements                 | Unit Test         |
 | PICARX-MOT-002       | The software shall stop the motors immediately upon receiving a stop command.                                | SYSTEM & SW Requirements                 | Unit Test         |
 | PICARX-MOT-003       | The software shall control the motor using GPIO pin 13 as specified in the Electrical Interface Control Document. | SYSTEM, SW Requirements & Electrical ICD | Unit Test         |
+| PICARX-US-001        | The software shall continuously monitor ultrasonic sensor readings to detect obstacles in the vehicle's path.                           | SYSTEM & SW Requirements                 | Unit Test         |
+| PICARX-US-002        | The software shall generate obstacle avoidance commands when an obstacle is detected within a predefined threshold distance.            | SYSTEM & SW Requirements                 | Unit Test         |
 | PICARX-INT-001       | The software shall integrate the camera and motor modules within the F Prime framework for seamless communication and telemetry logging. | SYSTEM & SW Requirements                 | Integration Test  |
 
 [!NOTE] Notice how the software also includes a requirement derived from the Electrical Interface Control Document (PICARX-MOT-003). This captures the details of the software/hardware interface and is captured here as a requirement.
 
+## PiCar-X: Component Design and Initial Implementation
+This section discussses the design of the component, the implementaion of a command to start/stop the PiCar-X to move and detect objects, and the sending of events. First, proceed to initial ground testing before finishing the implementation in the later sections.
+
+# Component Design
+
+In order for the PiCar-X to move and detect objects autonomously, it needs to accept commands for movement and obstacle avoidance, and control the motors and sensors using the Robot HAT library, which abstracts the lower-level hardware interfaces. The system leverages F Prime ports to communicate with the motor, camera, and ultrasonic sensor modules. A rate group input port is used to schedule periodic tasks—such as updating movement commands and polling sensor data.
+
+The PiCar-X system will contain three key components:
+
+- MotorController: Handles moving forward, stopping, and speed control.
+- CameraHandler: Captures images and logs image capture status.
+- UltrasonicSensor: Reads distance to obstacles and reports data to telemetry.
+Each component will send Robot HAT commands via Python scripts rather than interacting with GPIO/I2C.
+
+Additionally, standard F Prime ports are defined for:
+
+- Commands: To trigger actions like moving the vehicle, stopping, capturing an image, or reading sensor data.
+- Telemetry: To report the status of each component, including motor speed, obstacle detection, and camera capture status.
+- Events: To log significant system actions, such as movement state changes, image capture events, and detected obstacles.
+- Parameters: To allow runtime adjustments of settings like motor speed, obstacle detection threshold, and camera capture mode.
+- ExecPython: A dedicated port for invoking Python scripts, which interact with Robot HAT APIs for motor, camera, and sensor control.
+
+This component design is captured in the block diagram below, with input ports on the left and output ports on the right. Ports for standard F Prime functions (e.g., commands, events, telemetry, and parameters) are highlighted in green, while the ExecPython port (used for triggering external scripts) is specially integrated.
+
+![image](https://github.com/user-attachments/assets/ecff9840-32c5-4b0a-b19d-f92b8519d452)

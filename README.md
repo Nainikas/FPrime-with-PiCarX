@@ -5,7 +5,7 @@ Integrating PiCar-X compabilities with Object Detection and Movement to launch w
 1. Downloading the bootstraping tool for F'
    ```pip install fprime-bootstrap -- installs fprime bootstrap ```
 2. Creating a project
-   ```fprime-bootstrap project -- naming it as PiCarX ```
+   ```fprime-bootstrap project -- naming it as PiCar-X ```
 3. Downloading VS Plugins to help write the F' code
    -FPP
    -FPPTools
@@ -13,7 +13,7 @@ Integrating PiCar-X compabilities with Object Detection and Movement to launch w
 ## Project Setup
 Generate a build cache
 ```
-cd led-blinker
+cd PiCar-X
 . fprime-venv/bin/activate
 fprime-util generate
 ```

@@ -1,7 +1,7 @@
-### FPrime-with-PiCarX
+##### FPrime-with-PiCarX
 Integrating PiCar-X compabilities with Object Detection and Movement to launch with FPrime
 
-## Meeting the System Requirements using Raspberry Pi 5 for FPrime
+### Meeting the System Requirements using Raspberry Pi 5 for FPrime
 1. Downloading the bootstraping tool for F'
    ```pip install fprime-bootstrap -- installs fprime bootstrap ```
 2. Creating a project
@@ -10,15 +10,15 @@ Integrating PiCar-X compabilities with Object Detection and Movement to launch w
    -FPP
    -FPPTools
 
-## Project Setup
+### Project Setup
 Generate a build cache
 ```
 cd PiCar-X
 . fprime-venv/bin/activate
 fprime-util generate
 ```
-## Specifying Requirements
-# System Requirements
+#### Specifying Requirements
+### System Requirements
 We need high level system requirements. These requirements would be defined by requirements sepcified by the electronic subsystem which are themselves derived by requirements defined at the full system level.
 
 | **Requirement** | **Description**                                                                                                                       |
@@ -26,9 +26,9 @@ We need high level system requirements. These requirements would be defined by r
 | SYSTEM-001      | The system shall integrate the camera, motor, and ultrasonic sensor components using the F Prime framework.                           |
 | SYSTEM-002      | The system shall report telemetry data for the statuses of the camera, motor, and ultrasonic sensor components in real time.            |
 
+---
 
-
-# Software Requirements
+### Software Requirements
 
 | **Requirement** | **Description**                                                                                                                        |
 |-----------------|----------------------------------------------------------------------------------------------------------------------------------------|
@@ -42,7 +42,7 @@ We need high level system requirements. These requirements would be defined by r
 | ERR-006         | The software shall implement error handling and logging for the camera, motor, and ultrasonic sensor modules to facilitate debugging.   |
 
 
-# PiCar-X Requirements
+### PiCar-X Requirements
 
 Here we list a number of requirements for the PiCar-X software to implement.
 
@@ -59,10 +59,10 @@ Here we list a number of requirements for the PiCar-X software to implement.
 
 [!NOTE] Notice how the software also includes a requirement derived from the Electrical Interface Control Document (PICARX-MOT-003). This captures the details of the software/hardware interface and is captured here as a requirement.
 
-## PiCar-X: Component Design and Initial Implementation
+#### PiCar-X: Component Design and Initial Implementation
 This section discussses the design of the component, the implementaion of a command to start/stop the PiCar-X to move and detect objects, and the sending of events. First, proceed to initial ground testing before finishing the implementation in the later sections.
 
-# Component Design
+### Component Design
 
 In order for the PiCar-X to move and detect objects autonomously, it needs to accept commands for movement and obstacle avoidance, and control the motors and sensors using the Robot HAT library, which abstracts the lower-level hardware interfaces. The system leverages F Prime ports to communicate with the motor, camera, and ultrasonic sensor modules. A rate group input port is used to schedule periodic tasks—such as updating movement commands and polling sensor data.
 
@@ -85,7 +85,7 @@ This component design is captured in the block diagram below, with input ports o
 
 ![image](https://github.com/user-attachments/assets/6e339eb3-4826-4b8b-9005-7ae682a8c159)
 
-## Design Summary
+#### Design Summary
 
 ### Component Ports
 - run: Invoked at a set rate from the rate group, used to control movement, camera panning, and obstacle detection.
@@ -147,4 +147,4 @@ Instead of writing a single **integrated Python script**, we will **let FPrime e
 | **CameraHandler**   | `object_detection.py` | Controls **camera panning and tilting**. |
 | **UltrasonicSensor**| `avoiding_obstacles.py` | Manages **obstacle detection and avoidance**. |
 
-By **calling all three scripts in parallel**, FPrime will ensure that **movement, camera tracking, and obstacle detection happen simultaneously without needing a combined script**. 🎯
+By calling all three scripts in parallel**, FPrime will ensure that movement, camera tracking, and obstacle detection happen simultaneously without needing a combined script. 🎯

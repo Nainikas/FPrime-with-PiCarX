@@ -1,4 +1,4 @@
-# FPrime-with-PiCarX
+### FPrime-with-PiCarX
 Integrating PiCar-X compabilities with Object Detection and Movement to launch with FPrime
 
 ## Meeting the System Requirements using Raspberry Pi 5 for FPrime
@@ -85,3 +85,66 @@ This component design is captured in the block diagram below, with input ports o
 
 ![image](https://github.com/user-attachments/assets/6e339eb3-4826-4b8b-9005-7ae682a8c159)
 
+## Design Summary
+
+### Component Ports
+- run: Invoked at a set rate from the rate group, used to control movement, camera panning, and obstacle detection.
+- execPython: Triggers external Python scripts that interface with the Robot HAT library to execute movement, object detection, and obstacle avoidance.
+- Standard component ports (circled in green) are not explicitly listed here.
+
+---
+
+### **Commands**
+| **Component**        | **Command**                  | **Function** |
+|---------------------|----------------------------|-------------|
+| **MotorController** | `FORWARD`                   | Moves **forward** at a set speed. |
+|                     | `BACKWARD`                  | Moves **backward** at a set speed. |
+|                     | `STOP`                      | Stops the PiCar-X. |
+|                     | `SET_DIR_SERVO_ANGLE`       | Adjusts **steering direction** angle. |
+| **CameraHandler**   | `SET_CAM_PAN_ANGLE`         | Moves the **camera left/right**. |
+|                     | `SET_CAM_TILT_ANGLE`        | Moves the **camera up/down**. |
+| **UltrasonicSensor**| `READ_ULTRASONIC`           | Reads **distance to objects**. |
+
+---
+
+### **Events**
+| **Component**        | **Event**                 | **Description** |
+|---------------------|-------------------------|----------------|
+| **MotorController** | `MotorStateChanged`      | Triggered when PiCar-X **starts, stops, or changes direction**. |
+|                     | `SteeringAdjusted`       | Triggered when the **steering direction changes**. |
+| **CameraHandler**   | `CameraPanned`           | Triggered when the **camera moves left or right**. |
+|                     | `CameraTilted`           | Triggered when the **camera moves up or down**. |
+| **UltrasonicSensor**| `ObstacleDetected`       | Triggered when an **obstacle is detected**. |
+
+---
+
+### **Telemetry Channels**
+| **Component**        | **Telemetry Channel**    | **Description** |
+|---------------------|------------------------|----------------|
+| **MotorController** | `MotorSpeed`           | Reports **motor speed and direction**. |
+|                     | `SteeringAngle`        | Reports **current steering angle**. |
+| **CameraHandler**   | `CameraPanAngle`       | Reports **current camera pan angle**. |
+| **CameraTiltAngle** | `CameraTiltAngle`      | Reports **current camera tilt angle**. |
+| **UltrasonicSensor**| `ObstacleDistance`     | Reports **distance to the nearest obstacle**. |
+
+---
+
+### **Parameters**
+| **Component**        | **Parameter**          | **Description** |
+|---------------------|----------------------|----------------|
+| **MotorController** | `MOTOR_SPEED`        | Adjustable **motor speed**. |
+| **CameraHandler**   | `PAN_INTERVAL`       | Time **between camera panning movements** (default: 0.5s). |
+| **UltrasonicSensor**| `OBSTACLE_THRESHOLD` | Defines **distance threshold** for obstacle avoidance. |
+
+---
+
+## **ExecPython: Running Individual Python Scripts for Each Component**
+Instead of writing a single **integrated Python script**, we will **let FPrime execute three separate scripts simultaneously**:
+
+| **Component**        | **ExecPython Script**   | **Function** |
+|---------------------|----------------------|-------------|
+| **MotorController** | `movement.py`        | Handles **movement, speed, and direction**. |
+| **CameraHandler**   | `object_detection.py` | Controls **camera panning and tilting**. |
+| **UltrasonicSensor**| `avoiding_obstacles.py` | Manages **obstacle detection and avoidance**. |
+
+By **calling all three scripts in parallel**, FPrime will ensure that **movement, camera tracking, and obstacle detection happen simultaneously without needing a combined script**. 🎯

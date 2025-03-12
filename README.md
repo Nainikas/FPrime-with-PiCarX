@@ -147,4 +147,157 @@ Instead of writing a single **integrated Python script**, we will **let FPrime e
 | **CameraHandler**   | `object_detection.py` | Controls **camera panning and tilting**. |
 | **UltrasonicSensor**| `avoiding_obstacles.py` | Manages **obstacle detection and avoidance**. |
 
-By calling all three scripts in parallel**, FPrime will ensure that movement, camera tracking, and obstacle detection happen simultaneously without needing a combined script. 🎯
+By calling all three scripts in parallel, FPrime will ensure that movement, camera tracking, and obstacle detection happen simultaneously without needing a combined script.
+
+## Install Robot Hat and its necessary dependencies
+
+1. Connect to WiFi using the wpa_supplicant.config file.
+2. Enable I2C on Raspberry Pi.
+3. Install all modules for Robot Hat
+
+## Create the components
+
+Go to the terminal, navigate to the project's root directory and run 
+```
+# In PiCar-X
+cd Components
+fprime-util new --component
+```
+
+You will be prompted for the information regarding your component. Fill out the prompts as shown below:
+# 1. MotorController Component
+```
+[INFO] Cookiecutter source: using builtin
+  [1/8] Component name (MyComponent): MotorController
+  [2/8] Component short description (Component for F Prime FSW framework.): Controls movement using Robot Hat
+  [3/8] Component namespace (Components): Components
+  [4/8] Select component kind
+    1 - active
+    2 - passive
+    3 - queued
+    Choose from [1/2/3] (1): 1
+  [5/8] Enable Commands?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+  [6/8] Enable Telemetry?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+  [7/8] Enable Events?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+  [8/8] Enable Parameters?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+[INFO] Found CMake file at 'PiCar-X/Components/CMakeLists.txt'
+Add MotorController to PiCar-X/Components/CMakeLists.txt at end of file? (yes/no) [yes]: yes
+Generate implementation files? (yes/no) [yes]: yes
+Refreshing cache and generating implementation files...
+[INFO] Created new component and generated initial implementations.
+```
+# 2. CameraHandler Component
+```
+[INFO] Cookiecutter source: using builtin
+  [1/8] Component name (MyComponent): CameraHandler
+  [2/8] Component short description (Component for F Prime FSW framework.): Handles camera panning and tilting
+  [3/8] Component namespace (Components): Components
+  [4/8] Select component kind
+    1 - active
+    2 - passive
+    3 - queued
+    Choose from [1/2/3] (1): 1
+  [5/8] Enable Commands?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+  [6/8] Enable Telemetry?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+  [7/8] Enable Events?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+  [8/8] Enable Parameters?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+[INFO] Found CMake file at 'PiCar-X/Components/CMakeLists.txt'
+Add CameraHandler to PiCar-X/Components/CMakeLists.txt at end of file? (yes/no) [yes]: yes
+Generate implementation files? (yes/no) [yes]: yes
+Refreshing cache and generating implementation files...
+[INFO] Created new component and generated initial implementations.
+```
+
+# 3. UltrasonicSensor Component
+```
+[INFO] Cookiecutter source: using builtin
+  [1/8] Component name (MyComponent): UltrasonicSensor
+  [2/8] Component short description (Component for F Prime FSW framework.): Handles obstacle detection and avoidance using ultrasonic sensor
+  [3/8] Component namespace (Components): Components
+  [4/8] Select component kind
+    1 - active
+    2 - passive
+    3 - queued
+    Choose from [1/2/3] (1): 1
+  [5/8] Enable Commands?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+  [6/8] Enable Telemetry?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+  [7/8] Enable Events?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+  [8/8] Enable Parameters?
+    1 - yes
+    2 - no
+    Choose from [1/2] (1): 1
+[INFO] Found CMake file at 'PiCar-X/Components/CMakeLists.txt'
+Add UltrasonicSensor to PiCar-X/Components/CMakeLists.txt at end of file? (yes/no) [yes]: yes
+Generate implementation files? (yes/no) [yes]: yes
+Refreshing cache and generating implementation files...
+[INFO] Created new component and generated initial implementations.
+```
+
+## Define Component Commands, Events, Telemetry in '.fpp' Files
+
+Each component now has a directory in 'Components/'. Open each '.fpp' file inside its directory.
+
+1. To generate the implemention files after defining the '.fpp' files, run:
+```
+fprime-util impl
+```
+
+This will generate:
+- MotorController.template.cpp and MotorController.template.hpp
+- CameraHandler.template.cpp and CameraHandler.template.hpp
+- UltrasonicSensor.template.cpp and UltrasonicSensor.template.hpp
+
+Rename them by removing '.template' from them:
+```
+mv MotorController.template.cpp MotorController.cpp
+mv MotorController.template.hpp MotorController.hpp
+
+mv CameraHandler.template.cpp CameraHandler.cpp
+mv CameraHandler.template.hpp CameraHandler.hpp
+
+mv UltrasonicSensor.template.cpp UltrasonicSensor.cpp
+mv UltrasonicSensor.template.hpp UltrasonicSensor.hpp
+```
+
+2. Build and Validate the files
+
+Run:
+```
+fprime-util build
+```
+If everything compiles correctly, your FPrime components are now ready to integrate into the system topology.
+
+3. 

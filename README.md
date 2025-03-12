@@ -270,7 +270,7 @@ Refreshing cache and generating implementation files...
 
 Each component now has a directory in 'Components/'. Open each '.fpp' file inside its directory.
 
-1. To generate the implemention files after defining the '.fpp' files, run:
+### 1. To generate the implemention files after defining the '.fpp' files, run:
 ```
 fprime-util impl
 ```
@@ -292,7 +292,7 @@ mv UltrasonicSensor.template.cpp UltrasonicSensor.cpp
 mv UltrasonicSensor.template.hpp UltrasonicSensor.hpp
 ```
 
-2. Build and Validate the files
+### 2. Build and Validate the files
 
 Run:
 ```
@@ -300,4 +300,4 @@ fprime-util build
 ```
 If everything compiles correctly, your FPrime components are now ready to integrate into the system topology.
 
-3. 
+### 3. 

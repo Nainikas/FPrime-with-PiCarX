@@ -229,5 +229,16 @@ In the FPrime Ground UI:
 - Set the trigger value to 0
 This stops the PiCar-X's movement and detection logic
 
-# YouTube working model
+# Working model
+
+https://github.com/user-attachments/assets/56e1c1ba-ae68-4206-8788-c3c3447bba47
+
+# Alternatively, you can use Google's MediaPipe
+
+To learn more about it, refer : https://ai.google.dev/edge/mediapipe/solutions/guide
+
+https://github.com/user-attachments/assets/b64e0a0d-2d7b-479a-8645-e2ed118c5e5c
+
+
+
 

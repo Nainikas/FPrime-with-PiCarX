@@ -200,9 +200,34 @@ If built, with no errors, proceed to use Ground Data System using
 fprime-util gds --ip-port 6000
 ```
 
-## Run the PiCar standalone Python Script
+## Running the PiCar-X Python Detection Script
 
-1. In another terminal, run the Python Script used to detect objects while moving. It will wait and listen to the port 6000.
-2. In the F' UI, navigate to StartDetection and enter the trigger '1' for the PiCar-X to move and detect objects.
-3. Observe the detections that uses YOLO11. Refer to https://docs.ultralytics.com/models/yolo11/#overview for more details on the model.
-4. In the F' UI, navigate to StopDetection and enter the trigger '0' for the PiCar-X to stop movement and detecting objects.
+Follow these steps to run the PiCar-X object detection system alongside the FPrime UI:
+
+1. **Start the Detection Script**  
+   Open a new terminal on the Raspberry Pi and run the detection script.  
+   This script listens on **UDP port 6000** for start/stop triggers from the FPrime system:
+
+   ```
+   python3 object_detection.py
+   ```
+
+2. **Trigger Detection via FPrime UI**
+In the FPrime Ground UI:
+- Navigate to the StartDetection command
+- Set the trigger value to 1
+This instructs the PiCar-X to start moving and performing real-time object detection
+
+3. **View Detection Logs**
+The PiCar-X uses YOLOv11 to detect objects in real time.
+Detection events will be displayed in the FPrime UI log view.
+🔗 Learn more about the model here: [Ultralytics YOLOv11 Overview](https://docs.ultralytics.com/models/yolo11/#overview)
+
+4. **Stop the Detection Process**
+In the FPrime Ground UI:
+- Navigate to the StopDetection command in the FPrime UI
+- Set the trigger value to 0
+This stops the PiCar-X's movement and detection logic
+
+# YouTube working model
+

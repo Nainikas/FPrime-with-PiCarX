@@ -1,7 +1,7 @@
-## Prime-with-PiCarX
+# Prime-with-PiCarX
 Integrating PiCar-X capabilities with Object Detection and Autonomous Movement using FPrime
 
-### Meeting the System Requirements using Raspberry Pi 5 for FPrime
+## Meeting the System Requirements using Raspberry Pi 5 for FPrime
 1. Downloading the bootstraping tool for F'
    ```pip install fprime-bootstrap -- installs fprime bootstrap ```
 2. Creating a project
@@ -10,14 +10,14 @@ Integrating PiCar-X capabilities with Object Detection and Autonomous Movement u
    -FPP
    -FPPTools
 
-### Project Setup
+## Project Setup
 Activate virtual environment and generate a build cache.
 ```
 cd PiCar-x-FPrime
 . fprime-venv/bin/activate
 fprime-util generate
 ```
-#### Specifying Requirements
+## Specifying Requirements
 ### System Requirements
 We need high level system requirements. These requirements would be defined by requirements sepcified by the electronic subsystem which are themselves derived by requirements defined at the full system level.
 
@@ -50,7 +50,7 @@ Here we list a number of requirements for the PiCar-X software to implement.
 
 [!NOTE] Notice how the software also includes a requirement derived from the Electrical Interface Control Document. This captures the details of the software/hardware interface and is captured here as a requirement.
 
-#### PiCar-X: Component Design and Initial Implementation
+## PiCar-X: Component Design and Initial Implementation
 This section discussses the design of the component, the implementaion of a command to start/stop the PiCar-X to move and detect objects. 
 
 ### Component Design
@@ -76,7 +76,7 @@ Communication within the system leverages FPrime ports:
 
 - Parameters: Adjust operational settings dynamically.
 
-# Supported Commands
+### Supported Commands
 | **Command**       | **Description**                                 | **UDP Message** | **PiCar-X IP:Port** |
 |-------------------|-------------------------------------------------|-----------------|---------------------|
 | `StartDetection`  | Initiate object detection and PiCar-X movement. | `"1"`           | `192.168.1.99:6000` |
@@ -93,6 +93,8 @@ This component design is captured in the block diagram below.
 2. Enable I2C on Raspberry Pi.
 3. Install all modules for Robot Hat
 
+Refer the official website to install it properly. https://docs.sunfounder.com/projects/picar-x/en/latest/python/play_with_python.html
+
 ## Create the components
 
 Go to the terminal, navigate to the project's root directory and run 
@@ -103,7 +105,7 @@ fprime-util new --component
 ```
 
 You will be prompted for the information regarding your component. Fill out the prompts as shown below:
-# ObjectDetector Component
+### ObjectDetector Component
 ```
 [INFO] Cookiecutter source: using builtin
   [1/8] Component name (MyComponent): MotorController
@@ -173,7 +175,7 @@ fprime-util new --deployment
 ```
 
 You will be prompted for the information regarding your component. Fill out the prompts as shown below:
-# ObjectDetector Deployment
+### ObjectDetector Deployment
 ```
 [INFO] Cookiecutter source: using builtin
   [1/2] Deployment name (MyDeployment): MyDeployment
@@ -198,7 +200,7 @@ If built, with no errors, proceed to use Ground Data System using
 fprime-util gds --ip-port 6000
 ```
 
-# Run the PiCar standalone Python Script
+## Run the PiCar standalone Python Script
 
 1. In another terminal, run the Python Script used to detect objects while moving. It will wait and listen to the port 6000.
 2. In the F' UI, navigate to StartDetection and enter the trigger '1' for the PiCar-X to move and detect objects.

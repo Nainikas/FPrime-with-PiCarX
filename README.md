@@ -1,4 +1,4 @@
-##### FPrime-with-PiCarX
+## Prime-with-PiCarX
 Integrating PiCar-X capabilities with Object Detection and Autonomous Movement using FPrime
 
 ### Meeting the System Requirements using Raspberry Pi 5 for FPrime

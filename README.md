@@ -237,7 +237,9 @@ https://github.com/user-attachments/assets/56e1c1ba-ae68-4206-8788-c3c3447bba47
 
 To learn more about it, refer : https://ai.google.dev/edge/mediapipe/solutions/guide
 
-https://github.com/user-attachments/assets/b64e0a0d-2d7b-479a-8645-e2ed118c5e5c
+https://github.com/user-attachments/assets/b5c8d949-058a-4708-b082-beebb5b02477
+
+
 
 
 

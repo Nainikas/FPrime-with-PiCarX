@@ -221,19 +221,19 @@ The cross-compilation will use ARM's pre-built packages to run FSW on Pi.
    # In: Deployment Folder
    fprime-util generate aarch64-linux
    fprime-util build aarch64-linux
-   ```
+    ```
 4. **Download the software in the Pi**
-   ```
+    ```
    # For ARM 64-bit hardware
    # In: project root folder
    scp -r build-artifacts/aarch64-linux/<name-of-deployment> <username>@<device address>:deployment
    ```
 5. **Launch F' GDS with the dictionary on PC**
-  ```
-  # ARM 64-bit hardware
-  # In: project root folder
-  fprime-gds -n --dictionary build-artifacts/aarch64-linux/<name-of-deployment>/dict/<App Dictionary>.json --ip-client --ip-address <device-address>
-  ```
+   ```
+   # ARM 64-bit hardware
+   # In: project root folder
+   fprime-gds -n --dictionary build-artifacts/aarch64-linux/<name-of-deployment>/dict/<App Dictionary>.json --ip-client --ip-address <device-address>
+   ```
 6. **Run uploaded software on Pi**
    In another terminal, run
     ```

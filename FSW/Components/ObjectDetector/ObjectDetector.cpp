@@ -1,8 +1,8 @@
 // ======================================================================
 // \title  ObjectDetector.cpp
-// \brief  Custom UDP-based ObjectDetector component that logs detection
-//         packets as events. Uses StartDetection to trigger (trigger = 1) the Pi and
-//         StopDetection (trigger = 0) to halt detection. The UDP receiver
+// \brief  Custom UDP-based ObjectDetector component that starts/stops detection.
+//         Uses StartDetection to trigger (trigger = 1) the Pi and
+//         StopDetection (trigger = 0) to halt detection. The UDP server
 //         binds to 0.0.0.0:6000.
 // ======================================================================
 
@@ -33,21 +33,21 @@ namespace Components {
   }
 
   ObjectDetectorComponentImpl::~ObjectDetectorComponentImpl() {
-      m_stopUdpReceiver = true;
+      m_stopUdpServer = true;
       if (m_udpReceiverThread.joinable()) {
           m_udpReceiverThread.join();
       }
   }
 
   // ----------------------------------------------------------------------
-  // Custom UDP receiver thread function.
+  // Custom UDP server thread function.
   // Binds to 0.0.0.0:6000 (all interfaces) and continuously listens for detection messages.
   // Each received message is logged as an event.
   // ----------------------------------------------------------------------
-  void ObjectDetectorComponentImpl::udpReceiverThreadFunc() {
+  void ObjectDetectorComponentImpl::udpServerThreadFunc() {
       int sock = socket(AF_INET, SOCK_DGRAM, 0);
       if (sock < 0) {
-          Fw::LogStringArg err("Custom UDP Receiver: Failed to create socket");
+          Fw::LogStringArg err("Custom UDP Server: Failed to create socket");
           this->log_ACTIVITY_HI_ObjectDetected(err);
           return;
       }
@@ -68,7 +68,7 @@ namespace Components {
       localAddr.sin_port = htons(6000);
       localAddr.sin_addr.s_addr = INADDR_ANY;  // 0.0.0.0
       if (bind(sock, (struct sockaddr*)&localAddr, sizeof(localAddr)) < 0) {
-          Fw::LogStringArg err("Custom UDP Receiver: Failed to bind to 0.0.0.0:6000");
+          Fw::LogStringArg err("Custom UDP Server: Failed to bind to 0.0.0.0:6000");
           this->log_ACTIVITY_HI_ObjectDetected(err);
           close(sock);
           return;
@@ -81,7 +81,7 @@ namespace Components {
           perror("setsockopt SO_RCVTIMEO failed");
       }
       char buffer[1024];
-      while (!m_stopUdpReceiver) {
+      while (!m_stopUdpServer) {
           memset(buffer, 0, sizeof(buffer));
           struct sockaddr_in senderAddr;
           socklen_t senderLen = sizeof(senderAddr);
@@ -137,7 +137,7 @@ namespace Components {
   // ----------------------------------------------------------------------
   // StopDetection Command Handler:
   // Sends a UDP trigger "0" to the Pi at 192.168.1.99:6000 to stop detection,
-  // then stops the local UDP receiver thread.
+  // then stops the local UDP server thread.
   // ----------------------------------------------------------------------
   void ObjectDetectorComponentImpl::StopDetection_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, U32 trigger) {
       // We expect trigger==0 for stop command.
@@ -168,8 +168,8 @@ namespace Components {
           }
           
           m_stopUdpReceiver = true;
-          if (m_udpReceiverThread.joinable()) {
-              m_udpReceiverThread.join();
+          if (m_udpServerThread.joinable()) {
+              m_udpServerThread.join();
           }
       } else {
           Fw::LogStringArg logArg("StopDetection command: non-zero trigger received, ignoring");

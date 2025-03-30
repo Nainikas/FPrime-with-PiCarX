@@ -37,11 +37,11 @@ namespace Components {
     PRIVATE:
       U32 m_detectionCount;
       // Members for the custom UDP receiver thread.
-      std::atomic<bool> m_stopUdpReceiver;
-      std::thread m_udpReceiverThread;
+      std::atomic<bool> m_stopUdpServer;
+      std::thread m_udpServerThread;
 
       // Custom UDP receiver thread function.
-      void udpReceiverThreadFunc();
+      void udpServerThreadFunc();
   };
 
   using ObjectDetector = ObjectDetectorComponentImpl;

@@ -202,9 +202,7 @@ The cross-compilation will use ARM's pre-built packages to run FSW on Pi.
    ```
    sudo mkdir -p /opt/toolchains
    sudo chown $USER /opt/toolchains
-   curl -Ls https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc- 
-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz | tar -JC /opt/toolchains --strip- 
-components=1 -x
+   curl -Ls https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz | tar -JC /opt/toolchains --strip-components=1 -x
    ```
 2. **Ensure that the ARM toolchains were installed properly**
    ```

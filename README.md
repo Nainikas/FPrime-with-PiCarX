@@ -1,5 +1,5 @@
 # Prime-with-PiCarX
-Integrating PiCar-X capabilities with Object Detection and Autonomous Movement using FPrime
+Integrating PiCar-X capabilities with Object Detection and Autonomous Movement using FPrime. I use YOLO11n to detect objects and compare the pre-processing, inference, and post-processing time with using Google's mediapipe for edge detection as well. The F' software runs as UDP server through TCP server on the Pi. The Python standalone script uses Robot-Hat libraries to detect objects and run the YOLO model or the Mediapipe on Pi. The F' GDS runs on the PC as UDP client through TCP client listening to the Pi's IP using port 6000 while the TCP server listens to all systems on the same network using 0.0.0.0:6000.
 
 ## Meeting the System Requirements using Raspberry Pi 5 for FPrime
 1. Downloading the bootstraping tool for F'
@@ -62,7 +62,6 @@ The PiCar-X system will contain the component:
 - ObjectDetector:
   - Custom UDP-based component.
   - Sends triggers via UDP (1 to start, 0 to stop) to PiCar-X (IP: 192.168.1.99, Port: 6000).
-  - Receives UDP detection logs and records them as FPrime events.
 
 The component will send Robot HAT commands via Python scripts rather than interacting with GPIO and I2C.
 
@@ -108,8 +107,8 @@ You will be prompted for the information regarding your component. Fill out the 
 ### ObjectDetector Component
 ```
 [INFO] Cookiecutter source: using builtin
-  [1/8] Component name (MyComponent): MotorController
-  [2/8] Component short description (Component for F Prime FSW framework.): Controls movement using Robot Hat
+  [1/8] Component name (MyComponent): ObjectDetector
+  [2/8] Component short description (Component for F Prime FSW framework.): Component to send commands to control object detection and movement.
   [3/8] Component namespace (Components): Components
   [4/8] Select component kind
     1 - active
@@ -178,27 +177,72 @@ You will be prompted for the information regarding your component. Fill out the 
 ### ObjectDetector Deployment
 ```
 [INFO] Cookiecutter source: using builtin
-  [1/2] Deployment name (MyDeployment): MyDeployment
+  [1/2] Deployment name (MyDeployment): Deployment
   [2/2] Select communication driver type
     1 - TcpClient
     2 - TcpServer
     3 - UART
-    Choose from [1/2/3] (1): 1
+    Choose from [1/2/3] (1): 2
 [INFO] Found CMake file at 'PiCarUDP/project.cmake'
 Add MyDeployment to PiCarUDP/project.cmake at end of file? (yes/no) [yes]:yes
 ```
 
-Edit the instances.fpp and topology.fpp files to include the objectDetector instance and connections for MyDeployment.
+Edit the instances.fpp and topology.fpp files to include the objectDetector instance and connections for Deployment.
 
 Once saved, use
 ```
 fprime-util build
 ```
 
-If built, with no errors, proceed to use Ground Data System using
-```
-fprime-util gds --ip-port 6000
-```
+## Use Cross-Compilation to run FSW on Pi
+
+The cross-compilation will use ARM's pre-built packages to run FSW on Pi. 
+
+1. **Install the pre-packages provided by arm**
+   ```
+   sudo mkdir -p /opt/toolchains
+   sudo chown $USER /opt/toolchains
+   curl -Ls https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc- 
+arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz | tar -JC /opt/toolchains --strip- 
+components=1 -x
+   ```
+2. **Ensure that the ARM toolchains were installed properly**
+   ```
+   /opt/toolchains/bin/aarch64-none-linux-gnu-gcc -v 
+   ```
+3. **Build for 64-bit ARM Linux platform**
+    ```
+   export ARM_TOOLS_PATH=/opt/toolchains
+
+   #You can check to make sure the environment variable is set by running:
+   echo $ARM_TOOLS_PATH
+
+   #This should return the path /opt/toolchains
+   
+   # For in-person workshops and ARM 64-bit hardware
+   # In: Deployment Folder
+   fprime-util generate aarch64-linux
+   fprime-util build aarch64-linux
+   ```
+4. **Download the software in the Pi**
+   ```
+   # For ARM 64-bit hardware
+   # In: project root folder
+   scp -r build-artifacts/aarch64-linux/<name-of-deployment> <username>@<device address>:deployment
+   ```
+5. **Launch F' GDS with the dictionary on PC**
+  ```
+  # ARM 64-bit hardware
+  # In: project root folder
+  fprime-gds -n --dictionary build-artifacts/aarch64-linux/<name-of-deployment>/dict/<App Dictionary>.json --ip-client --ip-address <device-address>
+  ```
+6. **Run uploaded software on Pi**
+   In another terminal, run
+    ```
+    ssh <username>@<device-address>
+    deployment/bin/<name-of-deployment> -a 0.0.0.0 -p 6000
+    ```
+For more information, refer: https://fprime.jpl.nasa.gov/latest/docs/tutorials/cross-compilation/#f-running-on-arm-linux-tutorial
 
 ## Running the PiCar-X Python Detection Script
 
@@ -229,18 +273,19 @@ In the FPrime Ground UI:
 - Set the trigger value to 0
 This stops the PiCar-X's movement and detection logic
 
-# Working model
+# Working model using YOLO11n
 
 https://github.com/user-attachments/assets/56e1c1ba-ae68-4206-8788-c3c3447bba47
 
-# Alternatively, you can use Google's MediaPipe
+# Alternatively, using Google's MediaPipe
 
 To learn more about it, refer : https://ai.google.dev/edge/mediapipe/solutions/guide
 
 https://github.com/user-attachments/assets/b5c8d949-058a-4708-b082-beebb5b02477
 
-
-
+# Conclusion
+The pre-processing, inference, and post-processing using YOLO takes longer than using Google's mediapipe as we aim to run inference every frame. While the rover moves, sometimes the captured frame is not clear enough for inference which hampers the detection.
+Whereas, the Google's mediapipe detects every frame effectively using lesser time and clear frames.
 
 
 

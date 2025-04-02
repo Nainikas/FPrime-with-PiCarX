@@ -273,13 +273,13 @@ This stops the PiCar-X's movement and detection logic
 
 # Working model using YOLO11n
 
-https://github.com/user-attachments/assets/56e1c1ba-ae68-4206-8788-c3c3447bba47
+https://github.com/user-attachments/assets/b6c1eee0-01dd-4bc5-b93a-3632683c9cf4
 
 # Alternatively, using Google's MediaPipe
 
 To learn more about it, refer : https://ai.google.dev/edge/mediapipe/solutions/guide
 
-https://github.com/user-attachments/assets/b5c8d949-058a-4708-b082-beebb5b02477
+https://github.com/user-attachments/assets/c3406b66-2ab3-4bf8-942f-79382921df22
 
 # Conclusion
 The pre-processing, inference, and post-processing using YOLO takes longer than using Google's mediapipe as we aim to run inference every frame. While the rover moves, sometimes the captured frame is not clear enough for inference which hampers the detection.

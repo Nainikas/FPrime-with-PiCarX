@@ -1,5 +1,5 @@
 # Prime-with-PiCarX
-Integrating PiCar-X capabilities with Object Detection and Autonomous Movement using FPrime. I use YOLO11n to detect objects and compare the pre-processing, inference, and post-processing time with using Google's mediapipe for edge detection as well. The F' software runs as UDP server through TCP server on the Pi. The Python standalone script uses Robot-Hat libraries to detect objects and run the YOLO model or the Mediapipe on Pi. The F' GDS runs on the PC as UDP client through TCP client listening to the Pi's IP using port 6000 while the TCP server listens to all systems on the same network using 0.0.0.0:6000.
+Integrating PiCar-X capabilities with Object Detection and Autonomous Movement using FPrime. I use YOLO11n and Google's MediaPipe to detect objects and compare the pre-processing, inference, and post-processing time. The F' software runs as UDP server through TCP server on the Pi. The Python standalone script uses Robot-Hat libraries to detect objects and run the YOLO model or the Mediapipe on Pi. The F' GDS runs on the PC as UDP client through TCP client listening to the Pi's IP using port 6000 while the TCP server listens to all systems on the same network using 0.0.0.0:6000.
 
 ## Meeting the System Requirements using Raspberry Pi 5 for FPrime
 1. Downloading the bootstraping tool for F'
